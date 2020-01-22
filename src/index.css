@@ -58,7 +58,13 @@ code {
 
 #buttonEdit {
     position: relative;
-    top: -125px;
+    top: -50px;
+    right: 0;
+}
+
+#buttonPrint {
+    position: relative;
+    top: -40px;
     right: 0;
 }
 

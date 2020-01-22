@@ -58,8 +58,15 @@ class Experiences extends Component {
 
     showUpdatedExperience = (update) => {
         if (update) {
-            const index = this.state.experiences.findIndex((exp) => this.state.selectedExp._id === exp._id);
-            this.state.experiences[index] = {...this.state.selectedExp};
+            const experiences = [...this.state.experiences];
+            const index = experiences.findIndex((exp) => this.state.selectedExp._id === exp._id);
+            if (index === -1) {
+                experiences.push(this.state.selectedExp);
+            } else {
+               experiences[index] = {...this.state.selectedExp};
+            }
+            this.setState({experiences});
+
         }
         this.resetUpdate();
     };

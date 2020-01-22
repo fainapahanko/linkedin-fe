@@ -5,7 +5,7 @@ import Api from '../Api';
 const ProfileModal = props => {
   const { buttonLabel, className } = props;
 
-  const profile = JSON.parse(JSON.stringify(props.profile));
+
 
   let selectedFile = useState(null);
 
@@ -28,8 +28,9 @@ const ProfileModal = props => {
     // const image = document.getElementById('image').value;
 
     const profile = { name, surname, email, area, title, bio };
+    const {_id} = JSON.parse(JSON.stringify(props.profile));
     console.log(selectedFile);
-    Api.fetch('/profile', 'PUT', JSON.stringify(profile)).then(() => {
+    Api.fetch('/profile/' + _id, 'PUT', JSON.stringify(profile)).then(() => {
       var formData = new FormData();
       formData.append("profile", selectedFile);
       Api.request("/profile/" + Api.USER + "/picture", "POST", formData);
@@ -41,7 +42,7 @@ const ProfileModal = props => {
   return (
     <div>
       <Button onClick={toggle} className={'buttonEdit'} id='buttonEdit'>
-        <i className='fas fa-pencil-alt fa-2x'></i>
+        <i className='fas fa-pencil-alt'></i>
         {buttonLabel}
       </Button>
       <Modal isOpen={modal} toggle={toggle} className={className}>

@@ -3,7 +3,7 @@ import {ajax} from "rxjs/ajax";
 class Api {
 
     static BASE_URL = "http://localhost:3333";
-    // static BASE_URL = "https://linkedin-api-be.herokuapp.com";
+    //static BASE_URL = "https://linkedin-api-be.herokuapp.com";
 
     static get USER() {
         console.log("USER", sessionStorage.getItem("username"));
@@ -15,24 +15,29 @@ class Api {
     }
 
     static get AUTH() {
-        return btoa(Api.USER + ':' + Api.PASSWORD);
+        const user = Api.USER;
+        const pass = Api.PASSWORD;
+        const b = btoa(user + ':' + pass);
+        console.log(b);
+        return b
     }
 
     static get BASE_HEADERS() {
         return {
-            Authorization: 'basic ' + Api.AUTH
+            Authorization: 'Basic ' + Api.AUTH
         };
     }
 
     static async ajax(endpoint, method = 'GET', body, contentType = 'application/json') {
         const headers = {...Api.BASE_HEADERS};
         if (contentType) headers["Content-type"] = contentType;
+        console.log(headers);
         const res = await ajax({
             url: Api.BASE_URL + endpoint,
             method,
             headers,
             body,
-            withCredentials: true
+            //withCredentials: true
         }).toPromise();
         return JSON.parse(res);
     }
@@ -41,11 +46,12 @@ class Api {
         console.log(endpoint);
         const headers = {...Api.BASE_HEADERS};
         if (contentType) headers["Content-type"] = contentType;
+        console.log(headers)
         try {
             let resp = await fetch(Api.BASE_URL + endpoint, {
                 headers: headers,
-                mode: 'no-cors',
-                credentials: 'include',
+                //mode: 'no-cors',
+                //credentials: 'include',
                 method,
                 body
             });
@@ -80,7 +86,7 @@ class Api {
             var request = new XMLHttpRequest();
             request.open(method, Api.BASE_URL + endpoint, true);
             request.setRequestHeader("Authorization", "basic " + Api.AUTH);
-            request.onload = (res) => resolve(res);
+            request.onload = (res) => resolve(JSON.parse(request.response));
             request.onerror = (error) => reject(error);
             request.send(body);
         });

@@ -8,6 +8,7 @@ import moment from "moment";
 import {InfiniteScroll} from 'react-simple-infinite-scroll'
 import SearchProfile from "./SearchProfile";
 import LoadingBar from "./LoadingBar";
+import NewsFeedComments from "./NewsFeedComments";
 
 class NewsFeed extends Component {
     state = {
@@ -20,8 +21,8 @@ class NewsFeed extends Component {
 
     loadData = async () => {
         // load posts and users
-        const newsfeed = await Api.fetch('/posts/');
-        const users = await Api.fetch('/profile/');
+        const newsfeed = await Api.fetch('/posts');
+        const users = await Api.fetch('/profile');
         // map the user object to his post
         newsfeed.map(post => {
             post.user = users.find(user => user.username === post.username);
@@ -48,7 +49,7 @@ class NewsFeed extends Component {
     };
 
     componentDidMount = async () => {
-        setInterval(() => this.loadData(), 10000);
+        // setInterval(() => this.loadData(), 10000);
         this.loadData();
     };
 
@@ -89,7 +90,6 @@ class NewsFeed extends Component {
             return null;
         const allnews = [...this.state.newsfeed];
         allnews.map((news) => {
-
             news.isUpdated = news.updatedAt && (moment(news.createdAt).format("HH:mm") !== moment(news.updatedAt).format("HH:mm"))
         });
         return (
@@ -178,6 +178,7 @@ class NewsFeed extends Component {
                                                             // <Button className="button-margin" size="sm"
                                                             //         onClick={() => this.setState({selectedPost: {...post}})}><i
                                                             //     className='fas fa-pencil-alt'></i></Button>
+                                                            <Button className="button-margin" size="sm" onClick={() => this.updateNewsfeed(news)}> <i className='fas fa-pencil-alt'></i></Button>}
                                                             <Button className="button-margin" size="sm" onClick={() => this.deleteNewsfeed(news)}> <i className='fas fa-trash'></i></Button>
 
                                                             }
@@ -186,6 +187,7 @@ class NewsFeed extends Component {
                                                     </div>
                                                 </ListGroupItem>
                                             </ListGroup>
+                                            {/*<NewsFeedComments/>*/}
                                         </div>
 
 

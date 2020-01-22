@@ -8,7 +8,7 @@ class ProfilePage extends Component {
 
     render() {
         return (
-            <div>
+            <div id="profile">
                 <Profile match={this.props.match.params.id} />
                 <Experiences match={this.props.match.params.id} />
             </div>

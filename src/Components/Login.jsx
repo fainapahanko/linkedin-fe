@@ -23,7 +23,7 @@ class Login extends Component {
         //         this.setState({toDashboard: true});
         //     }
         // });
-        Api.ajax("/login", 'POST', JSON.stringify({username: this.state.username, password: this.state.password}))
+        Api.fetch("/login", 'POST', JSON.stringify({username: this.state.username, password: this.state.password}))
             .then(res => {
                 if (res) {
                     this.setState({toDashboard: true});

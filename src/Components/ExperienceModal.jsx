@@ -49,11 +49,22 @@ class ExperienceModal extends React.Component {
         }
         Api.fetch('/profile/' + Api.USER + '/experiences' + append, method, JSON.stringify(this.props.experience)).then((res) => {
             const expId = this.props.experience._id || res._id;
-            var formData = new FormData();
-            formData.append("experience", this.state.selectedFile);
+            if (this.state.selectedFile) {
+                var formData = new FormData();
+                formData.append("experience", this.state.selectedFile);
 
-            Api.request("/profile/" + Api.USER + "/experiences/" + expId + "/picture", 'POST', formData);
-            this.props.showUpdatedExperience(true);
+                Api.request("/profile/" + Api.USER + "/experiences/" + expId + "/picture", 'POST', formData)
+                    .then(p => {
+                        Object.keys(p.profile).forEach(k => {
+                            this.props.updateExp({
+                                target: {value: p.profile[k], name: k}
+                            });
+                        });
+                        this.props.showUpdatedExperience(true);
+                    });
+            } else {
+                this.props.showUpdatedExperience(true);
+            }
             this.setState({modal: false});
             //send the new experience to the parent component. the parent component shoukld just push it into the exprience array
             // window.location.reload();
@@ -93,7 +104,8 @@ class ExperienceModal extends React.Component {
                                         <Label>
                                             <input
                                                 type="checkbox"
-                                                defaultChecked={this.props.experience.presentWork} name="presentWork"
+                                                defaultChecked={this.props.experience.presentWork}
+                                                name="presentWork"
                                                 value={this.state.presentWork}
                                                 onChange={(val) => this.setState({presentWork: val.target.checked})}
                                             />
