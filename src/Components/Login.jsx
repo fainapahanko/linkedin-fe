@@ -14,15 +14,23 @@ class Login extends Component {
             return;
         }
         console.log(sessionStorage, Api.USER, Api.PASSWORD);
-        Api.checkAuth("/profile/me").then(profile => {
-            console.log(profile);
-            if (profile.status === 401) {
-                //sessionStorage.clear();
-                alert("invalid username and password");
-            } else {
-                this.setState({toDashboard: true});
-            }
-        });
+        // Api.checkAuth("/profile/me").then(profile => {
+        //     console.log(profile);
+        //     if (profile.status === 401) {
+        //         //sessionStorage.clear();
+        //         alert("invalid username and password");
+        //     } else {
+        //         this.setState({toDashboard: true});
+        //     }
+        // });
+        Api.ajax("/login", 'POST', JSON.stringify({username: this.state.username, password: this.state.password}))
+            .then(res => {
+                if (res) {
+                    this.setState({toDashboard: true});
+                } else {
+                    alert("invalid username and password");
+                }
+            });
     };
 
     handleChange = (e) => {

@@ -47,14 +47,14 @@ class Experiences extends Component {
         let resp = await Api.fetch("/profile/user13/experiences/" + exp._id, "DELETE");
         var expWithoutCurrent = this.state.experiences.filter(x => x._id !== exp._id);
         this.setState({experiences: expWithoutCurrent})
-    }
+    };
 
     updateExperience = (val) => {
         console.log(val.target);
         let currentExp = this.state.selectedExp;
         currentExp[val.target.name] = val.target.value;
         this.setState({selectedExp: currentExp})
-    }
+    };
 
     showUpdatedExperience = (update) => {
         if (update) {

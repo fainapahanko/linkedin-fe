@@ -61,18 +61,18 @@ class NewsFeed extends Component {
         var newsWithoutCurrent = this.state.newsfeed.filter(x => x._id !== post._id);
         this.setState({newsfeed: newsWithoutCurrent});
     };
-    // updateNewsfeed = (val) => {
-    //     let currentNews = this.state.selectedNews;
-    //     currentNews[val.target.name] = val.target.value;
-    //     this.setState({selectedNews: currentNews})
-    // }
-    // updateNewsfeed = (e, news) => {
-    //     console.log(e.target);
-    //     var formData = new FormData();
-    //     formData.append("post", e.target.files[0]);
-    //     Api.request("/posts/" + news._id, "POST", formData);
-    //     this.loadData();
-    // };
+    updateNewsfeed = (val) => {
+        let currentNews = this.state.selectedNews;
+        currentNews[val.target.name] = val.target.value;
+        this.setState({selectedNews: currentNews})
+    };
+    updateNewsfeed = (e, news) => {
+        console.log(e.target);
+        var formData = new FormData();
+        formData.append("post", e.target.files[0]);
+        Api.request("/posts/" + news._id, "POST", formData);
+        this.loadData();
+    };
 
 
     showUpdatedNewsfeed = (update) => {
@@ -175,8 +175,13 @@ class NewsFeed extends Component {
                                                             {(Api.USER === news.username) &&
                                                             <NewsFeedEdit news={news} refresh={this.loadData}/>
                                                             &&
+                                                            // <Button className="button-margin" size="sm"
+                                                            //         onClick={() => this.setState({selectedPost: {...post}})}><i
+                                                            //     className='fas fa-pencil-alt'></i></Button>
                                                             <Button className="button-margin" size="sm" onClick={() => this.deleteNewsfeed(news)}> <i className='fas fa-trash'></i></Button>
+
                                                             }
+
                                                         </div>
                                                     </div>
                                                 </ListGroupItem>
