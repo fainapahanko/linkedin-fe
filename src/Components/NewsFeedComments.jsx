@@ -4,7 +4,7 @@ import moment from "moment";
 import NewsFeedAdd from "./NewsFeedAdd";
 import {Button, Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {Link} from "react-router-dom";
-import LoadingBar from "./LoadingBar";
+
 
 class NewsFeedComments extends Component {
     state = {
@@ -14,6 +14,38 @@ class NewsFeedComments extends Component {
         items: [],
         cursor: 5
     };
+
+    constructor() {
+        super();
+        // bind context to methods
+        this.deleteComment = this.deleteComment.bind(this);
+        this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.editComment = this.editComment.bind(this);
+    }
+
+
+    handleFieldChange = event => {
+        const {value, name} = event.target;
+
+        this.setState({
+            ...this.state,
+            comment: {
+                ...this.state.comment,
+                [name]: value
+            }
+        });
+    };
+
+    onSubmit(e) {
+        // prevent default form submission
+        e.preventDefault();
+        const data = {
+            comment: this.state.comment.message,
+            rate: this.state.rating,
+            elementId: this.props.post
+        };
+    }
 
     loadData = async () => {
         // load posts and users
@@ -45,7 +77,7 @@ class NewsFeedComments extends Component {
     };
 
     componentDidMount = async () => {
-        setInterval(() => this.loadData(), 10000);
+        // setInterval(() => this.loadData(), 10000);
         this.loadData();
     };
 
@@ -80,69 +112,53 @@ class NewsFeedComments extends Component {
         this.resetUpdate();
     };
 
+    deleteComment(id) {
+        console.log(id.currentTarget.name);
+        this.crud.delete(id.currentTarget.name).then(result => {
+            console.log(result);
+            this.refreshData();
+        });
+
+    }
+
+    editComment(id) {
+        const c = this.state.comments.find((comment) => id.currentTarget.name === comment._id);
+        if (c) {
+            const editComment = JSON.parse(JSON.stringify(c));
+            editComment.message = editComment.comment;
+            this.setState({comment: editComment, rating: editComment.rate});
+        }
+
+    }
 
     render() {
-        if (!this.state.comments)
-            return null;
-        const allcomments = [...this.state.comments];
-        allcomments.map((comments) => {
-
-            comments.isUpdated = comments.updatedAt && (moment(comments.createdAt).format("HH:mm") !== moment(comments.updatedAt).format("HH:mm"))
-        });
-        return (
-            <>
-
-                <NewsFeedAdd refresh={this.loadData}/>
-                <Row>
-                    <Col>
-                        <div className="new-post-container">
-                            <h5>comments</h5>
-                        </div>
-                        <div>
-                            {this.state.items.length > 0
-                                ? this.state.items.map(comments => (
-
-                                    <div className="new-comment-container" key={comments._id}>
-                                        <ListGroup>
-                                            <ListGroupItem>
-                                                <div className="comment-detail">
-                                                    <div>
-                                                        <img src={comments.user.image} className="user-image"/>
-                                                    </div>
-                                                    <div className="details-container">
-                                                        <div
-                                                            className="user-name"><Link
-                                                            to={'users/' + comments.username}>{comments.user.name} {comments.user.surname}</Link>
-                                                        </div>
-                                                        <div
-                                                            className="user-title">{comments.user.title} in {comments.user.area}</div>
-                                                        <div
-                                                            className="post-age">{moment(comments.createdAt).fromNow()} {comments.isUpdated &&
-                                                        <span>- updated {moment(comments.updatedAt).fromNow()}</span>}</div>
-                                                    </div>
-                                                </div>
-                                            </ListGroupItem>
-                                            <ListGroupItem>{comments.text}</ListGroupItem>
-                                            <ListGroupItem className="post-images">
-                                                <img src={comments.image} className="posts-random-image"
-                                                     alt={'image'}/>
-                                            </ListGroupItem>
-                                        </ListGroup>
-                                    </div>
-
-
-                                ))
-                                : null}
-
-                            <div style={{marginBottom: '20px'}}>
-                                {this.state.isLoading && <LoadingBar/>}
+        return <div>
+            {this.props.comments && this.props.comments
+                .map((comment) =>
+                    <div style={{margin: '15px'}}>
+                    <ListGroup>
+                        <ListGroupItem color="success">
+                            <div className="comment-detail">
+                                <div>
+                                    <img src={comment.postedBy.profile.image} className="comment-image"/>
+                                </div>
+                                <div className="details-container">
+                                    <div
+                                        className="comment-user-name"><Link
+                                        to={'users/' + comment.username}>{comment.postedBy.profile.name} {comment.postedBy.profile.surname}</Link></div>
+                                    <div
+                                        className="comment-user-title">{comment.postedBy.profile.title} in {comment.postedBy.profile.area}</div>
+                                    <div
+                                        className="comment-post-age">{moment(comment.createdAt).fromNow()} {comment.isUpdated &&
+                                    <span>- updated {moment(comment.updatedAt).fromNow()}</span>}</div>
+                                </div>
                             </div>
-                        </div>
-                    </Col>
-                </Row>
-
-            </>
-        );
+                        </ListGroupItem>
+                        <ListGroupItem color="success"><div className="comment-text">{comment.comment}</div></ListGroupItem>
+                    </ListGroup>
+                    </div>
+                )}
+        </div>
     }
 }
 

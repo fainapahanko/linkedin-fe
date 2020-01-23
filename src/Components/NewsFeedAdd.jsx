@@ -14,8 +14,8 @@ class NewsFeedAdd extends Component {
             console.log(res);
             if (res && res._id && this.state.selectedFile) {
                 var formData = new FormData();
-                formData.append("post", this.state.selectedFile);
-                Api.request("/posts/" + res._id, "POST", formData).then(() => this.props.refresh());
+                formData.append("image", this.state.selectedFile);
+                Api.request("/posts/" + res._id + "/picture", "POST", formData).then(() => this.props.refresh());
             } else this.props.refresh();
         });
     };

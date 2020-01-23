@@ -9,6 +9,7 @@ import {InfiniteScroll} from 'react-simple-infinite-scroll'
 import SearchProfile from "./SearchProfile";
 import LoadingBar from "./LoadingBar";
 import NewsFeedComments from "./NewsFeedComments";
+import CommentModal from "./CommentModal";
 
 class NewsFeed extends Component {
     state = {
@@ -61,19 +62,20 @@ class NewsFeed extends Component {
         let resp = await Api.fetch("/posts/" + post._id, "DELETE");
         var newsWithoutCurrent = this.state.newsfeed.filter(x => x._id !== post._id);
         this.setState({newsfeed: newsWithoutCurrent});
+        this.loadData();
     };
     updateNewsfeed = (val) => {
         let currentNews = this.state.selectedNews;
         currentNews[val.target.name] = val.target.value;
         this.setState({selectedNews: currentNews})
     };
-    updateNewsfeed = (e, news) => {
-        console.log(e.target);
-        var formData = new FormData();
-        formData.append("post", e.target.files[0]);
-        Api.request("/posts/" + news._id, "POST", formData);
-        this.loadData();
-    };
+    // updateNewsfeed = (e, news) => {
+    //     console.log(e.target);
+    //     var formData = new FormData();
+    //     formData.append("post", e.target.files[0]);
+    //     Api.request("/posts/" + news._id, "POST", formData);
+    //     this.loadData();
+    // };
 
 
     showUpdatedNewsfeed = (update) => {
@@ -149,16 +151,8 @@ class NewsFeed extends Component {
                                                                 <div>Like</div>
                                                             </div>
                                                             <div className="post-bottom-icons">
-                                                                <div className="post-bottom-icon">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                         height="24" data-supported-dps="24x24"
-                                                                         fill="currentColor" focusable="false">
-                                                                        <path
-                                                                            d="M18 10H6V9h12v1zm4-5v17l-5-4H3a1 1 0 01-1-1V5a1 1 0 011-1h18a1 1 0 011 1zm-2 1H4v10h13.7l2.3 1.84V6zm-4 6H8v1h8v-1z"></path>
-                                                                    </svg>
-                                                                </div>
-                                                                <div>Comment</div>
-                                                            </div>
+
+                                                            </div><CommentModal postId={news._id} refresh={this.loadData}/>
                                                             <div className="post-bottom-icons">
                                                                 <div className="post-bottom-icon">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -173,21 +167,17 @@ class NewsFeed extends Component {
                                                             <div className="post-bottom-spacer"/>
 
                                                             {(Api.USER === news.username) &&
-                                                            <NewsFeedEdit news={news} refresh={this.loadData}/>
-                                                            &&
-                                                            // <Button className="button-margin" size="sm"
-                                                            //         onClick={() => this.setState({selectedPost: {...post}})}><i
-                                                            //     className='fas fa-pencil-alt'></i></Button>
-                                                            <Button className="button-margin" size="sm" onClick={() => this.updateNewsfeed(news)}> <i className='fas fa-pencil-alt'></i></Button>}
+                                                            <NewsFeedEdit news={news} refresh={this.loadData}/>}
+
                                                             <Button className="button-margin" size="sm" onClick={() => this.deleteNewsfeed(news)}> <i className='fas fa-trash'></i></Button>
 
-                                                            }
+
 
                                                         </div>
                                                     </div>
                                                 </ListGroupItem>
                                             </ListGroup>
-                                            {/*<NewsFeedComments/>*/}
+                                            <NewsFeedComments comments={news.comments}/>
                                         </div>
 
 

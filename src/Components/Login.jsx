@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
 import Api from "../Api";
 import {Redirect} from 'react-router-dom';
+import RegistrationModal from "./RegistrationModal";
 
 class Login extends Component {
     state = {
@@ -154,7 +155,7 @@ class Login extends Component {
                         <div className="footer-app-content-actions">
                             <div><a href="/checkpoint/rp/request-password-reset"
                                     className="btn__tertiary--medium action__btn">Forgot password?</a></div>
-                            <p>New to LinkedIn? <a href="/start/join" tabIndex="0">Join now</a></p></div>
+                            <p>New to LinkedIn? <RegistrationModal/></p></div>
                     </div>
                 </main>
             </div>
