@@ -4,6 +4,8 @@ import moment from "moment";
 import NewsFeedAdd from "./NewsFeedAdd";
 import {Button, Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {Link} from "react-router-dom";
+import NewsFeedEdit from "./NewsFeedEdit";
+import EditComment from "./EditComment";
 
 
 class NewsFeedComments extends Component {
@@ -43,7 +45,7 @@ class NewsFeedComments extends Component {
         const data = {
             comment: this.state.comment.message,
             rate: this.state.rating,
-            elementId: this.props.post
+            elementId: this.props.comment
         };
     }
 
@@ -85,10 +87,9 @@ class NewsFeedComments extends Component {
         this.setState({selectedComments: {}});
     }
 
-    deleteComments = async (post) => {
-        let resp = await Api.fetch("/posts/" + post._id, "DELETE");
-        var commentsWithoutCurrent = this.state.newsfeed.filter(x => x._id !== post._id);
-        this.setState({newsfeed: commentsWithoutCurrent});
+    deleteComment = async (post) => {
+        let resp = await Api.fetch("/posts/comment/" + post._id, "DELETE");
+        this.loadData()
     };
     // updateNewsfeed = (val) => {
     //     let currentNews = this.state.selectedNews;
@@ -112,14 +113,14 @@ class NewsFeedComments extends Component {
         this.resetUpdate();
     };
 
-    deleteComment(id) {
-        console.log(id.currentTarget.name);
-        this.crud.delete(id.currentTarget.name).then(result => {
-            console.log(result);
-            this.refreshData();
-        });
-
-    }
+    // deleteComment(id) {
+    //     console.log(id.currentTarget.name);
+    //     this.crud.delete(id.currentTarget.name).then(result => {
+    //         console.log(result);
+    //         this.refreshData();
+    //     });
+    //
+    // }
 
     editComment(id) {
         const c = this.state.comments.find((comment) => id.currentTarget.name === comment._id);
@@ -145,7 +146,8 @@ class NewsFeedComments extends Component {
                                 <div className="details-container">
                                     <div
                                         className="comment-user-name"><Link
-                                        to={'users/' + comment.username}>{comment.postedBy.profile.name} {comment.postedBy.profile.surname}</Link></div>
+                                        to={'users/' + comment.username}>{comment.postedBy.profile.name} {comment.postedBy.profile.surname}</Link>
+                                    </div>
                                     <div
                                         className="comment-user-title">{comment.postedBy.profile.title} in {comment.postedBy.profile.area}</div>
                                     <div
@@ -154,7 +156,13 @@ class NewsFeedComments extends Component {
                                 </div>
                             </div>
                         </ListGroupItem>
-                        <ListGroupItem color="success"><div className="comment-text">{comment.comment}</div></ListGroupItem>
+                        <ListGroupItem color="success">
+                            <div className="comment-text">{comment.comment}</div>
+                            {(Api.USER === comment.username) &&
+                            <EditComment comment={comment} refresh={this.loadData}/>}
+                            <Button className="button-margin" size="sm" onClick={() => this.deleteComment(comment)}> <i
+                                className='fas fa-trash'></i></Button>
+                        </ListGroupItem>
                     </ListGroup>
                     </div>
                 )}
