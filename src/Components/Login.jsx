@@ -14,7 +14,7 @@ class Login extends Component {
             alert("please fill all fields");
             return;
         }
-        console.log(sessionStorage, Api.USER, Api.PASSWORD);
+        //console.log(sessionStorage, Api.USER, Api.PASSWORD);
         // Api.checkAuth("/profile/me").then(profile => {
         //     console.log(profile);
         //     if (profile.status === 401) {
