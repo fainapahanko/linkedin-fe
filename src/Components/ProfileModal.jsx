@@ -25,7 +25,7 @@ const ProfileModal = props => {
     const area = document.getElementById('area').value;
     const title = document.getElementById('title').value;
     const bio = document.getElementById('bio').value;
-    const image = document.getElementById('image').value;
+    //const image = document.getElementById('image').value;
 
     const profile = { name, surname, email, area, title, bio };
     const {_id} = JSON.parse(JSON.stringify(props.profile));

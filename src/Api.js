@@ -2,7 +2,7 @@ import {ajax} from "rxjs/ajax";
 
 class Api {
 
-    static BASE_URL = "http://localhost:3333";
+    static BASE_URL = "https://linkedin-api-be.herokuapp.com";
     //static BASE_URL = "https://linkedin-api-be.herokuapp.com";
 
     static get USER() {
