@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Col, Form, FormGroup, Input, Label, Row} from "reactstrap";
 import Api from "../Api";
 import {Redirect} from 'react-router-dom';
+import RegistrationModal from "./RegistrationModal";
 
 class Login extends Component {
     state = {
@@ -13,16 +14,24 @@ class Login extends Component {
             alert("please fill all fields");
             return;
         }
-        console.log(sessionStorage, Api.USER, Api.PASSWORD);
-        Api.checkAuth("/profile/me").then(profile => {
-            console.log(profile);
-            if (profile.status === 401) {
-                //sessionStorage.clear();
-                alert("invalid username and password");
-            } else {
-                this.setState({toDashboard: true});
-            }
-        });
+        //console.log(sessionStorage, Api.USER, Api.PASSWORD);
+        // Api.checkAuth("/profile/me").then(profile => {
+        //     console.log(profile);
+        //     if (profile.status === 401) {
+        //         //sessionStorage.clear();
+        //         alert("invalid username and password");
+        //     } else {
+        //         this.setState({toDashboard: true});
+        //     }
+        // });
+        Api.fetch("/login", 'POST', JSON.stringify({username: this.state.username, password: this.state.password}))
+            .then(res => {
+                if (res) {
+                    this.setState({toDashboard: true});
+                } else {
+                    alert("invalid username and password");
+                }
+            });
     };
 
     handleChange = (e) => {
@@ -146,7 +155,7 @@ class Login extends Component {
                         <div className="footer-app-content-actions">
                             <div><a href="/checkpoint/rp/request-password-reset"
                                     className="btn__tertiary--medium action__btn">Forgot password?</a></div>
-                            <p>New to LinkedIn? <a href="/start/join" tabIndex="0">Join now</a></p></div>
+                            <p>New to LinkedIn? <RegistrationModal/></p></div>
                     </div>
                 </main>
             </div>
