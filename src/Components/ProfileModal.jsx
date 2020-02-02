@@ -7,7 +7,7 @@ const ProfileModal = props => {
 
 
 
-  let selectedFile = useState(null);
+   selectedFile = useState(null);
 
   const [modal, setModal] = useState(false);
 
